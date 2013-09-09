@@ -1,4 +1,11 @@
-ln -s bash_profile $HOME/.bash_profile
-ln -s bash_aliases $HOME/.bash_aliases
-ln -s inputrc $HOME/.inputrc
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+rm $HOME/.bash_profile
+rm $HOME/.bash_aliases
+rm $HOME/.inputrc
+
+ln -s $DIR/bash_profile $HOME/.bash_profile
+ln -s $DIR/bash_aliases $HOME/.bash_aliases
+ln -s $DIR/inputrc $HOME/.inputrc
+
 

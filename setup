@@ -1,0 +1,4 @@
+ln -s bash_profile $HOME/.bash_profile
+ln -s bash_aliases $HOME/.bash_aliases
+ln -s inputrc $HOME/.inputrc
+

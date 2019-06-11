@@ -22,6 +22,7 @@ function precmd() {
 ######################
 # general shelly things
 #######################
+alias resource="source ~/.zshrc"
 alias lal="ls -hal"
 alias dush='du -sh'
 dushs () {

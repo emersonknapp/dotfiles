@@ -1,4 +1,5 @@
 #!/bin/zsh
+export EDITOR=vim
 
 ###############
 # zsh conf

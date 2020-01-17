@@ -1,0 +1,13 @@
+# This is Git's per-user configuration file.
+[user]
+	name = Emerson Knapp
+	email = emerson.b.knapp@gmail.com
+[alias]
+	co = checkout
+	pushf = push --force-with-lease
+[core]
+	pager = less -F -X
+[diff]
+	tool = meld
+[commit]
+	gpgsign = on

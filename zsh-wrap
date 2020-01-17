@@ -1,0 +1,10 @@
+export ZSH="/home/emerson/.oh-my-zsh"
+ZSH_THEME="robbyrussell"
+plugins=(git)
+
+source $ZSH/oh-my-zsh.sh
+source ~/.dotfiles/zshrc
+export PATH=$PATH:~/.local/bin
+export GPG_TTY=$(tty)
+export PATH=$PATH:/snap/bin
+export PATH=$PATH:~/dev/tools/balena-cli

@@ -6,7 +6,6 @@ export EDITOR=vim
 ###############
 SOURCE=${(%):-%N}
 alias zconf="$EDITOR $SOURCE; source $SOURCE"
-alias resrc='source ~/.zshrc'
 export PROMPT="%D{%L:%M:%S} $PROMPT"
 function preexec() {
   timer=${timer:-$SECONDS}
@@ -74,4 +73,3 @@ alias gsl='git stash list'
 export PATH=$PATH:~/bin
 export PATH="$PATH:~/go/bin"
 export ANSIBLE_NOCOWS=1
-

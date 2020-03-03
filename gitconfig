@@ -1,11 +1,16 @@
-# This is Git's per-user configuration file.
+# This is common git config across all my machines
+# Use the following in ~/.gitconfig to include these settings
+# [include]
+#    path = ~/.dotfiles/gitconfig
 [user]
 	name = Emerson Knapp
 	email = emerson.b.knapp@gmail.com
+[init]
+	templatedir=~/.git-templates/
 [alias]
 	co = checkout
 	pushf = push --force-with-lease
-        dag = log --graph --format='format:%C(yellow)%h%C(reset) %C(blue)\"%an\" <%ae>%C(reset) %C(magenta)%cr%C(reset)%C(auto)%d%C(reset)%n%s' --date-order
+  dag = log --graph --format='format:%C(yellow)%h%C(reset) %C(blue)\"%an\" <%ae>%C(reset) %C(magenta)%cr%C(reset)%C(auto)%d%C(reset)%n%s' --date-order
 [core]
 	pager = less -F -X
 	hooksPath = ~/.git-templates/hooks
@@ -13,6 +18,3 @@
 	tool = meld
 [commit]
 	gpgsign = on
-[init]
-        templatedir = ~/.git-templates
-

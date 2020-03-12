@@ -4,3 +4,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ln -s $DIR/gitconfig ~/.gitconfig
 ln -s $DIR/tmux.conf ~/.tmux.conf
 ln -s $DIR/vimrc ~/.vimrc
+
+hooksdir=~/.git-templates/hooks
+mkdir -p $hooksdir
+cp $DIR/githooks/prepare-commit-msg $hooksdir/

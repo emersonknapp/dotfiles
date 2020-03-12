@@ -105,5 +105,5 @@
       - docker
     name: "{{ ansible_user }}"
 
-- name: ros | install ws management prereqs
-  shell: pip3 install vcstool
+- name: ros
+  include_tasks: ros.yml

@@ -1,10 +1,13 @@
 ---
 
+- set_fact:
+    distro: bionic
+
 - name: install basic packages
   apt:
-    name: "{{ item }}"
-  with_items:
+    name:
     - curl
+    - htop
     - python3-pip
     - screen
     - tmux
@@ -37,30 +40,70 @@
     dest: "{{ ansible_user_dir }}/.atom/"
 
 - name: atom | install extensions
-  shell: apm install {{ item }}
-  with_items:
-    - advanced-open-file
-    - atom-beautify
-    - autocomplete
-    - autocomplete-clang
-    - busy-signal
-    - git-blame
-    - git-time-machine
-    - hyperclick
-    - intentions
-    - language-cmake
-    - language-docker
-    - language-openscad
-    - linter
-    - linter-flake8
-    - linter-ui-default
-    - markdown-preview-plus
-    - revert-buffer
-    - split-diff
-    - vim-mode-plus
-    - you-complete-me
+  shell: apm install \
+    advanced-open-file \
+    atom-beautify \
+    autocomplete \
+    autocomplete-clang \
+    busy-signal \
+    git-blame \
+    git-time-machine \
+    hyperclick \
+    intentions \
+    language-cmake \
+    language-docker \
+    language-openscad \
+    linter \
+    linter-flake8 \
+    linter-ui-default \
+    markdown-preview-plus \
+    revert-buffer \
+    split-diff \
+    vim-mode-plus \
+    you-complete-me
+  when: atompkgs is defined
 
 - name: appearance packages
   apt:
-    name: gnome-tweaks
+    name:
+    - gnome-tweaks
+    - gnome-shell-extension-system-monitor
   become: yes
+
+- name: docker | prereqs
+  apt:
+    name:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg-agent
+    - software-properties-common
+  become: yes
+
+- name: docker | apt key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+  become: yes
+
+- name: docker | apt repo
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu bionic stable
+  become: yes
+
+- name: docker | install
+  apt:
+    name:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+  become: yes
+
+- name: docker | add me to group
+  user:
+    append: yes
+    groups:
+      - docker
+    name: "{{ ansible_user }}"
+
+- name: ros | install ws management prereqs
+  shell: pip3 install vcstool

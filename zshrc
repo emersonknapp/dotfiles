@@ -46,6 +46,9 @@ who-has-port () {
 function sship() {
   ssh -G $1 | grep ^hostname
 }
+function ssh-forget() {
+  sed -i "${1}d" ~/.ssh/known_hosts
+}
 
 devinfo () {
   udevadm info -a -p  $(udevadm info -q path -n $1)

@@ -3,17 +3,25 @@
 - set_fact:
     distro: bionic
 
-- name: install basic packages
+- name: basics | common apt packages
   apt:
     name:
     - curl
     - htop
+    - openssh-server
     - python3-pip
     - screen
     - tmux
+    - tree
     - vim
     - zsh
   become: yes
+
+- name: basics | install some core pip stuff
+  pip:
+    name:
+      - virtualenv
+      - docker-compose
 
 - name: oh my zsh
   shell: sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -61,7 +69,6 @@
     split-diff \
     vim-mode-plus \
     you-complete-me
-  when: atompkgs is defined
 
 - name: appearance packages
   apt:
@@ -104,6 +111,24 @@
     groups:
       - docker
     name: "{{ ansible_user }}"
+  become: yes
+
+- name: brave | apt key
+  apt_key:
+    url: https://brave-browser-apt-release.s3.brave.com/brave-core.asc
+  become: yes
+
+- name: brave | apt repo
+  apt_repository:
+    repo: deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main
+  become: yes
+
+- name: brave | install
+  apt:
+    name:
+      - brave-browser
+  become: yes
+
 
 - name: ros
   include_tasks: ros.yml

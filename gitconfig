@@ -16,5 +16,3 @@
 	hooksPath = ~/.git-templates/hooks
 [diff]
 	tool = meld
-[commit]
-	gpgsign = on

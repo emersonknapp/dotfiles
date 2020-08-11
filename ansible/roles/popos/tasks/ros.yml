@@ -1,10 +1,12 @@
-
-- name: ros | install ws management prereqs
+- name: ros | ws management tools
   pip:
-    name: vcstool
+    executable: pip3
+    name:
+      - vcstool
 
 - name: ros | install linters
   pip:
+    executable: pip3
     name:
       - flake8
       - flake8-blind-except
@@ -18,6 +20,7 @@
 
 - name: ros | install docker tools
   pip:
+    executable: pip3
     name:
       - rocker
       - off-your-rocker

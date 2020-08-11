@@ -1,0 +1,57 @@
+---
+
+- name: atom | apt key
+  apt_key:
+    url: https://packagecloud.io/AtomEditor/atom/gpgkey
+  become: yes
+
+- name: atom | apt repo
+  apt_repository:
+    repo: deb https://packagecloud.io/AtomEditor/atom/any/ any main
+  become: yes
+
+- name: atom | install
+  apt:
+    name: atom
+  become: yes
+
+- name: atom | install prefs
+  copy:
+    src: config.cson
+    dest: "{{ ansible_user_dir }}/.atom/"
+
+- name: atom | list packages to install
+  set_fact:
+    atom_packages:
+
+- name: atom | install extensions
+  shell: |
+    set -euo pipefail
+    apm list --bare | grep -E '^{{ item }}@' &&
+    echo 'Already installed.' ||
+    apm install '{{ item }}'
+  args:
+    executable: /bin/bash
+  with_items:
+    - advanced-open-file
+    - atom-beautify
+    - autocomplete
+    - autocomplete-clang
+    - busy-signal
+    - git-blame
+    - git-time-machine
+    - hyperclick
+    - intentions
+    - language-cmake
+    - language-docker
+    - language-openscad
+    - linter
+    - linter-flake8
+    - linter-ui-default
+    - markdown-preview-plus
+    - revert-buffer
+    - split-diff
+    - vim-mode-plus
+    - you-complete-me
+  register: apm_result
+  changed_when: "'Already installed.' not in apm_result.stdout"

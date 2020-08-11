@@ -1,6 +1,8 @@
 #!/bin/bash
+sudo apt update && sudo apt install -y zsh ansible
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+cp $DIR/zsh-wrap ~/.zshrc
 ln -s $DIR/gitconfig ~/.gitconfig
 ln -s $DIR/tmux.conf ~/.tmux.conf
 ln -s $DIR/vimrc ~/.vimrc

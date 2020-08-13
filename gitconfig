@@ -16,3 +16,7 @@
 	hooksPath = ~/.git-templates/hooks
 [diff]
 	tool = meld
+[url "git@github.com:"]
+  insteadOf = git://github.com/
+[url "git@github.com:"]
+  insteadOf = https://github.com/

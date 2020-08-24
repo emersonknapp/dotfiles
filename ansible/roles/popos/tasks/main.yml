@@ -9,10 +9,12 @@
     - curl
     - htop
     - git
+    - inotify-tools
     - meld
     - openssh-server
     - python3-pip
     - screen
+    - snap
     - tmux
     - tree
     - vim
@@ -25,6 +27,8 @@
     name:
       - virtualenv
       - docker-compose
+      - ipython
+      - jupyter
 
 - name: oh my zsh
   shell: sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -48,3 +52,7 @@
 
 - name: local ros dev
   include_tasks: ros.yml
+
+# consider snaps
+# * hub
+# * losslesscut

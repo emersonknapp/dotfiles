@@ -1,0 +1,17 @@
+---
+
+- name: vivaldi | apt key
+  apt_key:
+    url: https://repo.vivaldi.com/archive/linux_signing_key.pub
+  become: yes
+
+- name: vivaldi | apt repo
+  apt_repository:
+    repo: deb https://repo.vivaldi.com/archive/deb/ stable main
+  become: yes
+
+- name: vivaldi | install
+  apt:
+    name:
+      - vivaldi-stable
+  become: yes

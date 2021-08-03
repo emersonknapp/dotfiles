@@ -47,8 +47,8 @@
 - name: docker
   include_tasks: docker.yml
 
-- name: brave browser
-  include_tasks: brave.yml
+- name: vivaldi browser
+  include_tasks: vivaldi.yml
 
 - name: local ros dev
   include_tasks: ros.yml

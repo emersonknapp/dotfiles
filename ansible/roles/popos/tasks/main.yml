@@ -1,7 +1,7 @@
 ---
 
 - set_fact:
-    distro: bionic
+    distro: focal
 
 - name: basics | common apt packages
   apt:
@@ -9,6 +9,7 @@
     - curl
     - htop
     - git
+    - hub
     - inotify-tools
     - meld
     - openssh-server
@@ -29,10 +30,6 @@
       - docker-compose
       - ipython
       - jupyter
-
-- name: oh my zsh
-  shell: sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-  ignore_errors: yes  # fails the second time
 
 - name: atom
   include_tasks: atom.yml

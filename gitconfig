@@ -1,7 +1,4 @@
 # This is common git config across all my machines
-# Use the following in ~/.gitconfig to include these settings
-# [include]
-#    path = ~/.dotfiles/gitconfig
 [user]
 	name = Emerson Knapp
 	email = emerson.b.knapp@gmail.com

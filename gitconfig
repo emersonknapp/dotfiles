@@ -19,3 +19,5 @@
   insteadOf = https://github.com/
 [pull]
 	ff = only
+[hub]
+	protocol = ssh

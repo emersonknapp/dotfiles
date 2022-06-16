@@ -16,3 +16,7 @@ ssh-keygen
 ./setup
 ansible-playbook -K ansible/dev.yml
 ```
+
+# Notes on stuff to do after
+
+* For `hub` CLI, need to set environment variable `GITHUB_TOKEN`

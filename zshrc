@@ -76,3 +76,6 @@ alias gsl='git stash list'
 export PATH=$PATH:~/bin
 export PATH="$PATH:~/go/bin"
 export ANSIBLE_NOCOWS=1
+
+alias docker-arch-ps='for i in `docker ps --format "{{.Image}}"` ; do docker image inspect $i --format "$i -> {{.Architecture}} : {{.Os}}" ;done';
+

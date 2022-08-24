@@ -1,0 +1,34 @@
+Install homebrew (installs xcode tools)
+Add /opt/homebrew/bin BEFORE PATH
+
+brew install ansible python3 curl htop git hub tmux tree vim zsh
+brew install atom
+brew install spectacle
+brew install karabiner-elements
+brew install bartender
+brew install homebrew/cask/docker
+
+brew install --cask stats
+# todo how to automate stats config?
+
+# whole bunch of rigmarole with permissions for karabiner, bartender, spectacle
+# can be done programmatically?
+# karabiner needs both grabber and observer, which may take a minute
+# add remap in karabiner-elements from caps_lock to backspace_or_delete
+# manually start docker-desktop the first time
+
+brew install vivaldi
+brew install iterm2
+
+# TODO can i automate dock?
+
+# can i change prefs like "start at login" for all these shits programmatically?
+
+pip3 install virtualenv docker-compose ipython jupyter
+cp ansible/roles/popos/files/config.cson ~/.atom/
+
+apm install advanced-open-file atom-beautify autocomplete autocomplete-clang busy-signal git-blame git-time-machine hyperclick intentions language-cmake language-docker language-openscad linter linter-flake8 linter-ui-default markdown-preview-plus revert-buffer split-diff vim-mode-plus you-complete-me
+
+
+TODO
+what's wrong with alt-arrow for tmux osx

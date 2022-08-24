@@ -4,6 +4,7 @@
 	email = emerson.b.knapp@gmail.com
 [init]
 	templatedir=~/.git-templates/
+	defaultBranch = main
 [alias]
 	co = checkout
 	pushf = push --force-with-lease

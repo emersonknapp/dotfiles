@@ -32,8 +32,8 @@
       - ipython
       - jupyter
 
-- name: atom
-  include_tasks: atom.yml
+- name: vscode
+  include_tasks: vscode.yml
 
 - name: oh my zsh
   shell: sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"

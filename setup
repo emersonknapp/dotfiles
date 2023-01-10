@@ -12,6 +12,7 @@ fi
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 cp zsh-wrap ~/.zshrc
+rm ~/.gitconfig
 cp gitconfig-wrapper ~/.gitconfig
 ln -s tmux.conf ~/.tmux.conf
 ln -s vimrc ~/.vimrc

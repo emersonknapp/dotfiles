@@ -1,6 +1,8 @@
 # Emerson Knapp's Dotfiles
 
-This is an ongoing attempt at my complete development environment
+Living devenv setup. Not just dotfiles but also ansible playbook to install common tools. May not always work!
+
+NOTE: put extra env vars in `~/.envvars`, instead of ~/.zshrc, in case you rerun `setup` and overrwrite it. This will be sourced automatically
 
 ## Manual pre-prep
 

@@ -23,6 +23,13 @@
     - zsh
   become: yes
 
+- name: basics | desktop environment
+  apt:
+    name:
+      - gnome-tweaks
+      - indicator-multiload
+  become: yes
+
 - name: basics | install some core pip stuff
   pip:
     executable: pip3

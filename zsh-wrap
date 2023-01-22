@@ -4,6 +4,7 @@ plugins=(git docker docker-compose)
 
 source $ZSH/oh-my-zsh.sh
 source ~/.dotfiles/zshrc
+source ~/.envvars
 export PATH=$PATH:~/.local/bin
 export GPG_TTY=$(tty)
 export PATH=$PATH:/snap/bin

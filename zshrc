@@ -74,6 +74,7 @@ alias gsl='git stash list'
 # other devvy callouts
 ######################
 export PATH=$PATH:~/bin
+export PATH=$PATH:~/dev/tools
 export PATH="$PATH:~/go/bin"
 export ANSIBLE_NOCOWS=1
 

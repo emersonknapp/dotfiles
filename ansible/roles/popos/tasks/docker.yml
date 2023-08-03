@@ -1,5 +1,5 @@
 ---
-  
+
 - name: docker | prereqs
   apt:
     name:
@@ -17,7 +17,7 @@
 
 - name: docker | apt repo
   apt_repository:
-    repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    repo: deb https://download.docker.com/linux/ubuntu {{ ubuntu_distro }} stable
   become: yes
 
 - name: docker | install

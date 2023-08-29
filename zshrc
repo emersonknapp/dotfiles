@@ -57,6 +57,10 @@ devinfo () {
 alias xclip="xclip -selection c"
 alias df='df -h'
 
+spacer () {
+  du -sh $1/* | sort -h
+}
+
 ##############
 # git wflows
 ##############

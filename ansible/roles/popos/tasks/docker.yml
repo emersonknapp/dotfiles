@@ -35,3 +35,10 @@
       - docker
     name: "{{ ansible_user }}"
   become: yes
+
+- name: docker | enable emulation
+  apt:
+    name:
+    - qemu-user-static
+    - binfmt-support
+  become: yes

@@ -1,0 +1,14 @@
+[/]
+center-display=false
+compact-display=true
+cpu-display=true
+cpu-graph-width=100
+cpu-individual-cores=false
+cpu-show-menu=true
+cpu-show-text=false
+cpu-style='graph'
+icon-display=false
+memory-show-text=false
+move-clock=false
+net-show-text=false
+show-tooltip=true

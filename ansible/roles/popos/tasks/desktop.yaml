@@ -3,18 +3,40 @@
 - name: desktop | tools
   apt:
     name:
+      - dconf-cli
       - gnome-tweaks
       - gnome-shell-extension-manager
       - wmctrl
       - gir1.2-gtop-2.0
-  become: yes
+  become: true
 
-# TODO actually this
-- name: desktop | system monitor shell extension
-  fetch:
-    src_url: https://github.com/fflewddur/tophat/releases/download/v11/tophat@fflewddur.github.io.v11.shell-extension.zip
-    extract: yes
-    dest: ~/.local/share/tophat@fflewddur.github.io
 
-- name: desktop | enable tophat gnome extension
-  shell: gnome-extensions enable tophat@fflewddur.github.io
+# TOPHAT is also kinda good
+# - name: desktop | system monitor shell extension
+#   fetch:
+#     src_url: https://github.com/fflewddur/tophat/releases/download/v11/tophat@fflewddur.github.io.v11.shell-extension.zip
+#     extract: yes
+#     dest: ~/.local/share/tophat@fflewddur.github.io
+
+# - name: desktop | enable tophat gnome extension
+#   shell: gnome-extensions enable tophat@fflewddur.github.io
+
+
+# ALTERNATIVELY for the good one
+# NOTE this is gonna get broke on Gnome 46 with Noble
+- git:
+    url: https://github.com/paradoxxxzero/gnome-shell-system-monitor-applet
+    version: 21d7b4e7a03ec8145b0b90c4f0b15c27d6f53788
+    dest: ~/dev/tools/gnome-shell-system-monitor-applet
+  register: new-sysmon-applet-code
+
+- shell:
+    cmd: make install
+    pwd: ~/dev/tools/gnome-shell-system-monitor-applet
+  when: new-sysmon-applet.changed
+
+- shell: killall -3 gnome-shell
+  when: new-sysmon-applet.changed
+
+
+- shell: dconf load /org/gnome/shell/extensions/system-monitor/ < system-monitor.dconf

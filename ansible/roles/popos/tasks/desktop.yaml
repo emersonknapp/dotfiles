@@ -1,0 +1,20 @@
+---
+
+- name: desktop | tools
+  apt:
+    name:
+      - gnome-tweaks
+      - gnome-shell-extension-manager
+      - wmctrl
+      - gir1.2-gtop-2.0
+  become: yes
+
+# TODO actually this
+- name: desktop | system monitor shell extension
+  fetch:
+    src_url: https://github.com/fflewddur/tophat/releases/download/v11/tophat@fflewddur.github.io.v11.shell-extension.zip
+    extract: yes
+    dest: ~/.local/share/tophat@fflewddur.github.io
+
+- name: desktop | enable tophat gnome extension
+  shell: gnome-extensions enable tophat@fflewddur.github.io

@@ -23,41 +23,35 @@
     - zsh
   become: yes
 
-- name: basics | desktop environment
-  apt:
-    name:
-      - gnome-tweaks
-      - indicator-multiload
-  become: yes
+- name: basics | pip upgrade
+  pip:
+    executable: pip3
+    name: pip
+    state: latest
+  tags: [python]
 
 - name: basics | install some core pip stuff
   pip:
     executable: pip3
     name:
-      - virtualenv
-      - docker-compose
       - ipython
       - jupyter
+  tags: [python]
 
-- name: vscode
-  include_tasks: vscode.yml
-
+# TODO fix this so that we don't have to ignore errors - especially since sometimes they're real
 - name: oh my zsh
   shell: sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
   ignore_errors: yes  # fails the second time
+  tags: [omz]
 
-- name: appearance packages
-  apt:
-    name:
-    - gnome-tweaks
-    - gnome-shell-extension-system-monitor
-  become: yes
+- include_tasks: desktop.yaml
+  tags: [desktop]
 
-- name: docker
-  include_tasks: docker.yml
+- include_tasks: vscode.yml
+  tags: [vscode]
 
-- name: vivaldi browser
-  include_tasks: vivaldi.yml
+- include_tasks: docker.yml
+  tags: [docker]
 
-# - name: local ros dev
-#   include_tasks: ros.yml
+- include_tasks: vivaldi.yml
+  tags: [vivaldi]

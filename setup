@@ -11,6 +11,7 @@ else
 fi
 
 # TODO this could be in the ansible _shrug_
+# TODO(emerson) this HAS to be ordered better. right now i'm installing this zshrc, then oh-my-zsh is overwriting it
 cp $DIR/zsh-wrap ~/.zshrc
 rm ~/.gitconfig
 cp $DIR/gitconfig-wrapper ~/.gitconfig

@@ -18,6 +18,10 @@
   insteadOf = git://github.com/
 [url "git@github.com:"]
   insteadOf = https://github.com/
+[url "git@gitlab.com:"]
+  insteadOf = git://gitlab.com/
+[url "git@gitlab.com:"]
+  insteadOf = https://gitlab.com/
 [pull]
 	ff = only
 [hub]

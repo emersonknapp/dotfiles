@@ -9,9 +9,11 @@
     - curl
     - htop
     - git
+    - git-lfs
     - hub
     - inotify-tools
     - meld
+    - ncdu
     - nmap
     - openssh-server
     - python3-pip

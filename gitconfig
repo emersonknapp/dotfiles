@@ -3,7 +3,7 @@
 	name = Emerson Knapp
 	email = emerson.b.knapp@gmail.com
 [init]
-	templatedir=~/.git-templates/
+	templatedir=~/.git-template/
 	defaultBranch = main
 [alias]
 	co = checkout
@@ -11,7 +11,7 @@
   dag = log --graph --format='format:%C(yellow)%h%C(reset) %C(blue)\"%an\" <%ae>%C(reset) %C(magenta)%cr%C(reset)%C(auto)%d%C(reset)%n%s' --date-order
 [core]
 	pager = less -F -X
-	hooksPath = ~/.git-templates/hooks
+#	hooksPath = ~/.git-templates/hooks
 [diff]
 	tool = meld
 [url "git@github.com:"]

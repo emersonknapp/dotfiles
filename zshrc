@@ -60,6 +60,7 @@ alias df='df -h'
 spacer () {
   du -sh $1/* | sort -h
 }
+alias sizer=spacer
 
 ##############
 # git wflows
@@ -77,10 +78,12 @@ alias gsl='git stash list'
 ######################
 # other devvy callouts
 ######################
-export PATH=$PATH:~/bin
-export PATH=$PATH:~/dev/tools
-export PATH="$PATH:~/go/bin"
+export PATH=$PATH:$HOME/bin
+export PATH=$PATH:$HOME/.local/bin
+export PATH=$PATH:$HOME/dev/tools
+export PATH="$PATH:$HOME/go/bin"
 export ANSIBLE_NOCOWS=1
 
 alias docker-arch-ps='for i in `docker ps --format "{{.Image}}"` ; do docker image inspect $i --format "$i -> {{.Architecture}} : {{.Os}}" ;done';
 
+alias dcomp='docker-compose'

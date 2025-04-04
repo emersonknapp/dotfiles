@@ -1,0 +1,38 @@
+---
+
+- name: Virtman packages
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - virt-manager
+    - dnsmasq
+
+
+# TODO(ek) the libvirt network bridge
+# $ virsh net-edit default
+# # add line <domain name='emerson.sandbox' localOnly='yes'/>
+# $ virsh net-destroy default
+# $ virsh net-start default
+# # now this should show your change
+# $ virsh net-dumpxml default
+
+- name: Local DNS
+  ansible.builtin.copy:
+    src: files/dnsmasq.conf
+    dest: /etc/NetworkManager/conf.d/localdns.conf
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      [main]
+      dns=dnsmasq
+
+
+- name: ResolveD config
+  ansible.builtin.blockinfile:
+    path: /etc/systemd/resolved.conf
+    block: |
+      [Resolve]
+      DNS=192.168.122.1
+      Domains=~{{ virtman_domain }}

@@ -1,0 +1,24 @@
+---
+# install chocolatey
+
+# choco install -y python --version 3.8.3
+# choco install -y vcredist2013 vcredist140
+# download and run https://slproweb.com/download/Win64OpenSSL-1_1_1t.exe
+# setx /m OPENSSL_CONF "C:\Program Files\OpenSSL-Win64\bin\openssl.cfg"
+# add  C:\Program Files\OpenSSL-Win64\bin\ to system PATH
+
+# download VS thru https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community&rel=16&src=myvs&utm_medium=microsoft&utm_source=my.visualstudio.com&utm_campaign=download&utm_content=vs+community+2019
+# install with Detkop Depelopment With C++ selected
+
+# choco install -y cmake
+# append  C:\Program Files\CMake\bin to the PATH
+
+# download nupkgs from https://github.com/ros2/choco-packages/releases/tag/2022-03-15
+# choco install -y -s .\Downloads asio cunit eigen tinyxml-usestl tinyxml2
+
+# python -m pip install setuptools==59.6.0
+# python -m pip install -U catkin_pkg cryptography empy importlib-metadata jsonschema lark==1.1.1 lxml matplotlib netifaces numpy psutil pycairo pydot pyparsing==2.4.7 pyyaml rosdistro
+
+# choco  install -y cppcheck curl git winflexbison3
+# pip install -U colcon-common-extensions coverage flake8 flake8-blind-except flake8-builtins flake8-class-newline flake8-comprehensions flake8-deprecated flake8-docstrings flake8-import-order flake8-quotes mock mypy==0.931 pep8 pydocstyle pytest pytest-mock vcstool
+

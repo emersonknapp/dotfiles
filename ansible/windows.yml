@@ -1,0 +1,4 @@
+---
+- hosts: localhost
+  roles:
+    - ros2_windows

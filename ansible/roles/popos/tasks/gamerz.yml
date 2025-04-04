@@ -1,0 +1,27 @@
+---
+
+- name: steam | install
+  apt:
+    name:
+    - steam
+  become: yes
+
+- name: discord | install
+  apt:
+    deb: https://discordapp.com/api/download?platform=linux&format=deb
+  become: yes
+
+# TODO nvidia settings?
+# Note: steam games w/ proton were working great on 20.04 with my 1070 yesterday
+# Today on 22.04 no good
+# nvidia-driver-525 is current
+# trying nvidia-driver-515...
+# nope the gui couldn't handle it
+# sudo add-apt-repository ppa:graphics-drivers/ppa
+# sudo apt purge nvidia-driver-525
+# sudo apt install nvidia-driver-510
+
+# gamescope has an insane number of dependencies and NO LIST
+# https://github.com/Plagman/gamescope
+# checked out 3.11.0
+# build issue: https://github.com/Plagman/gamescope/issues/476

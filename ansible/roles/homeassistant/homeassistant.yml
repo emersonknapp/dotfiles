@@ -1,0 +1,9 @@
+docker run -d \                                                                                                                                                                                                                                                                                 0s
+  --name homeassistant \
+  --privileged \
+  --restart=unless-stopped \
+  -e TZ=America/Los_Angeles \
+  -v /home/emerson/.config/homeassistant:/config \
+  -v /run/dbus:/run/dbus:ro \
+  --network=host \
+  ghcr.io/home-assistant/home-assistant:stable

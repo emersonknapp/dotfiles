@@ -5,3 +5,5 @@ set expandtab
 set nu
 map <Enter> o<ESC>
 map <S-Enter> O<ESC>
+syntax on
+set backspace=indent,eol,start

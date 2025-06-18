@@ -13,7 +13,9 @@
 	pager = less -F -X
 #	hooksPath = ~/.git-templates/hooks
 [diff]
-	tool = meld
+    tool = meld
+[difftool "vscode"]
+    cmd = code --wait --diff $LOCAL $REMOTE
 [url "git@github.com:"]
   insteadOf = git://github.com/
 [url "git@github.com:"]

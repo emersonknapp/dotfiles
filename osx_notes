@@ -2,7 +2,6 @@ Install homebrew (installs xcode tools)
 Add /opt/homebrew/bin BEFORE PATH
 
 brew install ansible python3 curl htop git hub tmux tree vim zsh
-brew install atom
 brew install spectacle
 brew install karabiner-elements
 brew install bartender

@@ -65,12 +65,16 @@ alias sizer=spacer
 ##############
 # git wflows
 ##############
+# git checkout last
 alias gcl='git checkout $_'
+# git add last
 alias gal='git add $_'
 alias grh='git reset HEAD'
+# git new branch
 alias gnb='git checkout -b'
 alias gd='git diff --ignore-space-at-eol'
 alias gs='git status'
+# git delete remote branch
 gdrb() { git push $1 --delete $2 }
 alias gprune='git remote prune'
 alias gsl='git stash list'

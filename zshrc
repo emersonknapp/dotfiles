@@ -78,6 +78,7 @@ alias gs='git status'
 gdrb() { git push $1 --delete $2 }
 alias gprune='git remote prune'
 alias gsl='git stash list'
+alias grc='git rebase --continue'
 
 ######################
 # other devvy callouts
@@ -91,3 +92,10 @@ export ANSIBLE_NOCOWS=1
 alias docker-arch-ps='for i in `docker ps --format "{{.Image}}"` ; do docker image inspect $i --format "$i -> {{.Architecture}} : {{.Os}}" ;done';
 
 alias dcomp='docker-compose'
+
+show_virtual_env() {
+  if [[ -n "$VIRTUAL_ENV" && -n "$DIRENV_DIR" ]]; then
+    echo "($(basename $VIRTUAL_ENV)) "
+  fi
+}
+PS1='$(show_virtual_env)'$PS1

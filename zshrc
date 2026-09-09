@@ -84,7 +84,8 @@ alias grc='git rebase --continue'
 # other devvy callouts
 ######################
 export PATH=$PATH:$HOME/bin
-export PATH=$PATH:$HOME/.local/bin
+# Ahead of /usr/bin: the uv-installed keyring/just/pre-commit must win over the apt-packaged ones.
+export PATH=$HOME/.local/bin:$PATH
 export PATH=$PATH:$HOME/dev/tools
 export PATH="$PATH:$HOME/go/bin"
 export ANSIBLE_NOCOWS=1

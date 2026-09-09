@@ -22,4 +22,7 @@ hooksdir=~/.git-templates/hooks
 mkdir -p $hooksdir
 cp $DIR/githooks/prepare-commit-msg $hooksdir/
 
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+
 popd

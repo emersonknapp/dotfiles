@@ -8,6 +8,16 @@
     state: present
     update_cache: true
 
+# The zsh shell hook is provided by the oh-my-zsh `direnv` plugin configured in
+# ek-base's zshrc (it no-ops until direnv is installed), so only the binary is
+# needed here.
+- name: Install direnv
+  become: true
+  ansible.builtin.apt:
+    name: direnv
+    state: present
+    update_cache: true
+
 - name: Create apt keyrings directory
   become: true
   ansible.builtin.file:

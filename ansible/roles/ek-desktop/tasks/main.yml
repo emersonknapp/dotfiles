@@ -44,7 +44,7 @@
   become: true
   ansible.builtin.apt:
     name: insync
-    state: present
+    state: latest
     update_cache: true
 
 # Use Vivaldi's apt repo rather than a pinned .deb so the browser stays current
@@ -73,7 +73,7 @@
   become: true
   ansible.builtin.apt:
     name: vivaldi-stable
-    state: present
+    state: latest
     update_cache: true
 
 # Microsoft serves an ASCII-armored key; apt reads it directly from a .asc
@@ -101,7 +101,7 @@
   become: true
   ansible.builtin.apt:
     name: code
-    state: present
+    state: latest
     update_cache: true
 
 # Regolith is an alternate desktop, selectable at the login screen alongside
@@ -135,5 +135,78 @@
       - regolith-session-flashback
       - regolith-look-lascaille
       - xdg-desktop-portal-regolith
+    state: latest
+    update_cache: true
+
+# 1Password serves an ASCII-armored key; apt reads it directly from a .asc
+# file. The debsig-verify path below is separate and does need a dearmored
+# (binary) keyring, hence gnupg.
+- name: Install 1Password prerequisites
+  become: true
+  ansible.builtin.apt:
+    name: gnupg
     state: present
+    update_cache: true
+
+- name: Download 1Password apt GPG key
+  become: true
+  ansible.builtin.get_url:
+    url: https://downloads.1password.com/linux/keys/1password.asc
+    dest: /etc/apt/keyrings/1password-archive-keyring.asc
+    mode: "0644"
+
+- name: Add 1Password apt repository
+  become: true
+  ansible.builtin.deb822_repository:
+    name: 1password
+    types: [deb]
+    uris: https://downloads.1password.com/linux/debian/amd64
+    suites: [stable]
+    components: [main]
+    architectures: [amd64]
+    signed_by: /etc/apt/keyrings/1password-archive-keyring.asc
+    state: present
+
+# debsig-verify checks the .deb package signature. 1Password ships a policy and
+# a dedicated keyring under fixed, fingerprint-named paths.
+- name: Create 1Password debsig policy directory
+  become: true
+  ansible.builtin.file:
+    path: /etc/debsig/policies/AC2D62742012EA22
+    state: directory
+    mode: "0755"
+
+- name: Install 1Password debsig policy
+  become: true
+  ansible.builtin.get_url:
+    url: https://downloads.1password.com/linux/debian/debsig/1password.pol
+    dest: /etc/debsig/policies/AC2D62742012EA22/1password.pol
+    mode: "0644"
+
+- name: Create 1Password debsig keyring directory
+  become: true
+  ansible.builtin.file:
+    path: /usr/share/debsig/keyrings/AC2D62742012EA22
+    state: directory
+    mode: "0755"
+
+- name: Download 1Password debsig key
+  become: true
+  ansible.builtin.get_url:
+    url: https://downloads.1password.com/linux/keys/1password.asc
+    dest: /usr/share/debsig/keyrings/AC2D62742012EA22/1password.asc
+    mode: "0644"
+
+- name: Dearmor 1Password debsig keyring
+  become: true
+  ansible.builtin.command:
+    cmd: gpg --dearmor --yes --output debsig.gpg 1password.asc
+    chdir: /usr/share/debsig/keyrings/AC2D62742012EA22
+    creates: /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg
+
+- name: Install 1Password
+  become: true
+  ansible.builtin.apt:
+    name: 1password
+    state: latest
     update_cache: true

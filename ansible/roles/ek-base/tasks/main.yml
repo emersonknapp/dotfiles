@@ -21,7 +21,7 @@
 # oh-my-zsh bootstrap (theme, plugins) followed by the rest of the shell config.
 - name: Ensure ~/.zshrc sources the dotfiles zshrc
   ansible.builtin.blockinfile:
-    path: "{{ ansible_env.HOME }}/.zshrc"
+    path: "{{ ansible_facts['env'].HOME }}/.zshrc"
     create: true
     mode: "0644"
     block: |
@@ -31,7 +31,7 @@
   ansible.builtin.shell: |
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
   args:
-    creates: "{{ ansible_env.HOME }}/.oh-my-zsh"
+    creates: "{{ ansible_facts['env'].HOME }}/.oh-my-zsh"
   environment:
     KEEP_ZSHRC: "yes"
     RUNZSH: "no"
@@ -40,14 +40,14 @@
 - name: Set zsh as the default login shell
   become: true
   ansible.builtin.user:
-    name: "{{ ansible_env.USER }}"
+    name: "{{ ansible_facts['env'].USER }}"
     shell: /usr/bin/zsh
 
 # Let git own ~/.gitconfig (git writes to it), just ensure it includes the
 # versioned config from the dotfiles repo.
 - name: Ensure ~/.gitconfig includes the dotfiles gitconfig
   ansible.builtin.blockinfile:
-    path: "{{ ansible_env.HOME }}/.gitconfig"
+    path: "{{ ansible_facts['env'].HOME }}/.gitconfig"
     create: true
     mode: "0644"
     block: |
@@ -56,8 +56,8 @@
 
 - name: Symlink terminal config files
   ansible.builtin.file:
-    src: "{{ ansible_env.HOME }}/.dotfiles/{{ item.src }}"
-    dest: "{{ ansible_env.HOME }}/{{ item.dest }}"
+    src: "{{ ansible_facts['env'].HOME }}/.dotfiles/{{ item.src }}"
+    dest: "{{ ansible_facts['env'].HOME }}/{{ item.dest }}"
     state: link
     force: true
   loop:
@@ -67,6 +67,6 @@
 - name: Install tmux plugin manager (tpm)
   ansible.builtin.git:
     repo: https://github.com/tmux-plugins/tpm
-    dest: "{{ ansible_env.HOME }}/.tmux/plugins/tpm"
+    dest: "{{ ansible_facts['env'].HOME }}/.tmux/plugins/tpm"
     depth: 1
     update: false

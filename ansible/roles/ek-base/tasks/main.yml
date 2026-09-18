@@ -1,0 +1,72 @@
+---
+# Base setup for any of Emerson's machines (headless or desktop): shell,
+# git, and terminal config. Mirrors what the old `setup` script did, minus the
+# Ansible install (bootstrap handles that now).
+
+- name: Install base packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - zsh
+      - git
+      - tmux
+      - vim
+      - curl
+    state: present
+    update_cache: true
+
+# Ensure ~/.zshrc exists with our managed block BEFORE installing oh-my-zsh.
+# The omz installer only honors KEEP_ZSHRC when the file already exists;
+# otherwise it writes its own template over it. ~/.dotfiles/zshrc holds the
+# oh-my-zsh bootstrap (theme, plugins) followed by the rest of the shell config.
+- name: Ensure ~/.zshrc sources the dotfiles zshrc
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env.HOME }}/.zshrc"
+    create: true
+    mode: "0644"
+    block: |
+      source ~/.dotfiles/zshrc
+
+- name: Install oh-my-zsh
+  ansible.builtin.shell: |
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  args:
+    creates: "{{ ansible_env.HOME }}/.oh-my-zsh"
+  environment:
+    KEEP_ZSHRC: "yes"
+    RUNZSH: "no"
+    CHSH: "no"
+
+- name: Set zsh as the default login shell
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_env.USER }}"
+    shell: /usr/bin/zsh
+
+# Let git own ~/.gitconfig (git writes to it), just ensure it includes the
+# versioned config from the dotfiles repo.
+- name: Ensure ~/.gitconfig includes the dotfiles gitconfig
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env.HOME }}/.gitconfig"
+    create: true
+    mode: "0644"
+    block: |
+      [include]
+      	path = ~/.dotfiles/gitconfig
+
+- name: Symlink terminal config files
+  ansible.builtin.file:
+    src: "{{ ansible_env.HOME }}/.dotfiles/{{ item.src }}"
+    dest: "{{ ansible_env.HOME }}/{{ item.dest }}"
+    state: link
+    force: true
+  loop:
+    - { src: tmux.conf, dest: .tmux.conf }
+    - { src: vimrc, dest: .vimrc }
+
+- name: Install tmux plugin manager (tpm)
+  ansible.builtin.git:
+    repo: https://github.com/tmux-plugins/tpm
+    dest: "{{ ansible_env.HOME }}/.tmux/plugins/tpm"
+    depth: 1
+    update: false

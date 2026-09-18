@@ -1,0 +1,4 @@
+---
+# Kubernetes minor release to track. The upstream keyring and repo path are
+# both scoped to this version.
+kubernetes_version: v1.37

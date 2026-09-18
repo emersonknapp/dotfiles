@@ -1,0 +1,8 @@
+---
+- name: Provision a Polymath desktop
+  hosts: localhost
+  connection: local
+  roles:
+    - ek-base
+    - ek-desktop
+    - polymath-dev

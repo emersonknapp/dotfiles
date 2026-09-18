@@ -1,4 +1,17 @@
 #!/bin/zsh
+
+###############
+# oh-my-zsh
+###############
+export ZSH=~/.oh-my-zsh
+ZSH_THEME="robbyrussell"
+plugins=(git docker docker-compose direnv)
+source $ZSH/oh-my-zsh.sh
+
+source ~/.envvars
+export PATH=~/.local/bin:$PATH
+export GPG_TTY=$(tty)
+
 export EDITOR=vim
 
 ###############

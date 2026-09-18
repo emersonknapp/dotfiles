@@ -1,0 +1,75 @@
+---
+- name: Create apt keyrings directory
+  become: true
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+
+# Pop!_OS (and other Ubuntu derivatives) set UBUNTU_CODENAME to the upstream
+# Ubuntu release, which is what upstream apt repos expect. Fall back to
+# VERSION_CODENAME when UBUNTU_CODENAME is absent.
+- name: Resolve Ubuntu codename for apt repos
+  ansible.builtin.shell: |
+    set -o pipefail
+    . /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}"
+  args:
+    executable: /bin/bash
+  register: ubuntu_codename
+  changed_when: false
+
+# The mkvtoolnix key is served as a binary keyring, so it is stored as .gpg
+# and used as-is (no dearmor needed).
+- name: Download MKVToolNix GPG key
+  become: true
+  ansible.builtin.get_url:
+    url: https://mkvtoolnix.download/gpg-pub-moritzbunkus.gpg
+    dest: /etc/apt/keyrings/gpg-pub-moritzbunkus.gpg
+    mode: "0644"
+
+- name: Add MKVToolNix apt repository
+  become: true
+  ansible.builtin.deb822_repository:
+    name: mkvtoolnix
+    types: [deb, deb-src]
+    uris: https://mkvtoolnix.download/ubuntu/
+    suites: ["{{ ubuntu_codename.stdout }}"]
+    components: [main]
+    architectures: [amd64]
+    signed_by: /etc/apt/keyrings/gpg-pub-moritzbunkus.gpg
+    state: present
+
+- name: Install MKVToolNix
+  become: true
+  ansible.builtin.apt:
+    name:
+      - mkvtoolnix
+      - mkvtoolnix-gui
+    state: present
+    update_cache: true
+
+# OBS is distributed via a PPA rather than a standalone repo. apt_repository
+# parses the ppa: shorthand and manages its signing key; it needs
+# software-properties-common present to do so. v4l2loopback provides the
+# virtual camera device OBS feeds.
+- name: Install OBS prerequisites
+  become: true
+  ansible.builtin.apt:
+    name:
+      - software-properties-common
+      - v4l2loopback-dkms
+    state: present
+    update_cache: true
+
+- name: Add OBS Studio PPA
+  become: true
+  ansible.builtin.apt_repository:
+    repo: ppa:obsproject/obs-studio
+    state: present
+
+- name: Install OBS Studio
+  become: true
+  ansible.builtin.apt:
+    name: obs-studio
+    state: present
+    update_cache: true

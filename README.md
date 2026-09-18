@@ -1,31 +1,55 @@
 # Emerson Knapp's Dotfiles
 
-Living devenv setup. Not just dotfiles but also ansible playbook to install common tools. May not always work!
+Living devenv setup: dotfiles plus Ansible roles to provision common tools on a new machine.
+Targets Ubuntu / Pop!_OS. May not always work!
 
-NOTE: put extra env vars in `~/.envvars`, instead of ~/.zshrc, in case you rerun `setup` and overrwrite it. This will be sourced automatically
+NOTE: put extra env vars in `~/.envvars` rather than `~/.zshrc`.
+`~/.dotfiles/zshrc` sources it automatically, and it stays out of anything Ansible or tools manage.
 
 ## Manual pre-prep
 
-Recommended -- run an upgrade on a new installation, the live boot disk is likely out of date
+Recommended -- upgrade a fresh installation, the live boot disk is likely out of date.
 
 ```
 sudo apt update
 sudo apt upgrade
 ```
 
-First you need an SSH key uploaded to GitHub (~/.ssh/id-rsa.pub after this, goes to https://github.com/settings/keys)
+## Bootstrap
+
+Run this on a new machine to lay the foundation.
+It installs a couple base tools and gets you ready to run Ansible.
+Run it as your normal user (not root); it sudos when needed.
 
 ```
-ssh-keygen
+curl -fsSL https://raw.githubusercontent.com/emersonknapp/dotfiles/main/bootstrap.sh | bash
 ```
 
-## Running the installation
+## Provision
+
+Bootstrap doesn't apply any roles so you can pick what this machine needs.
+Playbooks live in `ansible/`, run one by name with `just`:
 
 ```
-./setup
-ansible-playbook -K ansible/dev.yml -u $(whoami)
+just converge polymath-desktop
 ```
 
-# Notes on stuff to do after
+`converge` installs the Galaxy collection dependencies, then runs `ansible/<name>.yml`.
+Playbooks compose roles:
 
-* For `hub` CLI, need to set environment variable `GITHUB_TOKEN`
+- `polymath-desktop` -- `ek-base`, `ek-desktop`, `polymath-dev`
+
+Roles (each self-contained):
+
+- `ek-base` -- shell (oh-my-zsh + zsh), git, tmux, vim config; base for any machine
+- `ek-desktop` -- GUI tools: Insync, Vivaldi, VS Code, Regolith
+- `polymath-dev` -- Docker, GitHub CLI, Vagrant, kubectl, Tailscale
+- `media-editing` -- MKVToolNix, OBS Studio
+
+## After provisioning
+
+- Connect Tailscale: `sudo tailscale up`
+- For pushing to git remotes over SSH, add an SSH key to GitHub
+  (`ssh-keygen`, then upload `~/.ssh/id_rsa.pub` at https://github.com/settings/keys).
+  The clone uses HTTPS, so this is only needed to push.
+- For the `gh` CLI, set the `GITHUB_TOKEN` environment variable.

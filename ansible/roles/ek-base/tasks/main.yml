@@ -12,6 +12,8 @@
       - tmux
       - vim
       - curl
+      - tree
+      - htop
     state: present
     update_cache: true
 
@@ -70,3 +72,22 @@
     dest: "{{ ansible_facts['env'].HOME }}/.tmux/plugins/tpm"
     depth: 1
     update: false
+
+# revdiff has no apt repo or PyPI package, only .deb files on GitHub Releases.
+# Install the pinned release deb for this host's architecture via apt.
+# Idempotent: apt skips reinstalling when the same version is present.
+- name: Determine dpkg architecture
+  ansible.builtin.command: dpkg --print-architecture
+  register: dpkg_architecture
+  changed_when: false
+
+- name: Download revdiff deb
+  ansible.builtin.get_url:
+    url: "https://github.com/umputun/revdiff/releases/download/v{{ revdiff_version }}/revdiff_{{ revdiff_version }}_linux_{{ dpkg_architecture.stdout }}.deb"
+    dest: "/tmp/revdiff_{{ revdiff_version }}_linux_{{ dpkg_architecture.stdout }}.deb"
+    mode: "0644"
+
+- name: Install revdiff
+  become: true
+  ansible.builtin.apt:
+    deb: "/tmp/revdiff_{{ revdiff_version }}_linux_{{ dpkg_architecture.stdout }}.deb"

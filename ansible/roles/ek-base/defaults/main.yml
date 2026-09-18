@@ -1,0 +1,4 @@
+---
+# revdiff release to install. No apt repo exists, so this is pinned and bumped
+# manually. See https://github.com/umputun/revdiff/releases
+revdiff_version: 1.13.0

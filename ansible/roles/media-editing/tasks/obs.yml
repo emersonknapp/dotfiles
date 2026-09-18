@@ -1,0 +1,26 @@
+---
+# OBS is distributed via a PPA rather than a standalone repo.
+# apt_repository parses the ppa: shorthand and manages its signing key.
+# It needs software-properties-common present to do so.
+# v4l2loopback provides the virtual camera device OBS feeds.
+- name: Install OBS prerequisites
+  become: true
+  ansible.builtin.apt:
+    name:
+      - software-properties-common
+      - v4l2loopback-dkms
+    state: present
+    update_cache: true
+
+- name: Add OBS Studio PPA
+  become: true
+  ansible.builtin.apt_repository:
+    repo: ppa:obsproject/obs-studio
+    state: present
+
+- name: Install OBS Studio
+  become: true
+  ansible.builtin.apt:
+    name: obs-studio
+    state: present
+    update_cache: true

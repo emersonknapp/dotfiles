@@ -7,20 +7,20 @@
   become: true
   ansible.builtin.apt:
     name:
-      - zsh
-      - git
-      - tmux
-      - vim
       - curl
-      - tree
+      - direnv
+      - git
       - htop
+      - tmux
+      - tree
+      - vim
+      - zsh
     state: present
     update_cache: true
 
-# Ensure ~/.zshrc exists with our managed block BEFORE installing oh-my-zsh.
-# The omz installer only honors KEEP_ZSHRC when the file already exists;
-# otherwise it writes its own template over it. ~/.dotfiles/zshrc holds the
-# oh-my-zsh bootstrap (theme, plugins) followed by the rest of the shell config.
+# Ensure ~/.zshrc exists with our managed block before installing oh-my-zsh.
+# The omz installer only honors KEEP_ZSHRC when the file already exists, otherwise it writes its own template over it.
+# ~/.dotfiles/zshrc holds the oh-my-zsh bootstrap (theme, plugins) followed by the rest of the shell config.
 - name: Ensure ~/.zshrc sources the dotfiles zshrc
   ansible.builtin.blockinfile:
     path: "{{ ansible_facts['env'].HOME }}/.zshrc"
@@ -45,8 +45,8 @@
     name: "{{ ansible_facts['env'].USER }}"
     shell: /usr/bin/zsh
 
-# Let git own ~/.gitconfig (git writes to it), just ensure it includes the
-# versioned config from the dotfiles repo.
+# Let git own ~/.gitconfig, since git writes to it.
+# Just ensure it includes the versioned config from the dotfiles repo.
 - name: Ensure ~/.gitconfig includes the dotfiles gitconfig
   ansible.builtin.blockinfile:
     path: "{{ ansible_facts['env'].HOME }}/.gitconfig"

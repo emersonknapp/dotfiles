@@ -1,0 +1,9 @@
+---
+# ek-base's zshrc enables the oh-my-zsh `direnv` plugin, which provides the zsh hook.
+# That plugin no-ops until direnv is installed, so only the binary is needed here.
+- name: Install direnv
+  become: true
+  ansible.builtin.apt:
+    name: direnv
+    state: present
+    update_cache: true

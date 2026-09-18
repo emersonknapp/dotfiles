@@ -1,0 +1,26 @@
+---
+- name: Download GitHub CLI GPG key
+  become: true
+  ansible.builtin.get_url:
+    url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
+    dest: /etc/apt/keyrings/githubcli-archive-keyring.gpg
+    mode: "0644"
+
+- name: Add GitHub CLI apt repository
+  become: true
+  ansible.builtin.deb822_repository:
+    name: github-cli
+    types: [deb]
+    uris: https://cli.github.com/packages
+    suites: [stable]
+    components: [main]
+    architectures: ["{{ dpkg_architecture.stdout }}"]
+    signed_by: /etc/apt/keyrings/githubcli-archive-keyring.gpg
+    state: present
+
+- name: Install GitHub CLI
+  become: true
+  ansible.builtin.apt:
+    name: gh
+    state: present
+    update_cache: true

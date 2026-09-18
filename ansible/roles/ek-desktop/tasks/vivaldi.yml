@@ -1,0 +1,28 @@
+---
+# Use Vivaldi's apt repo rather than a pinned .deb so the browser stays current through apt upgrades.
+# The signing key is ASCII-armored (.pub), so apt reads it directly from a .asc file.
+# The repo suite is the literal "stable", not the Ubuntu codename.
+- name: Download Vivaldi GPG key
+  become: true
+  ansible.builtin.get_url:
+    url: https://repo.vivaldi.com/stable/linux_signing_key.pub
+    dest: /etc/apt/keyrings/vivaldi.asc
+    mode: "0644"
+
+- name: Add Vivaldi apt repository
+  become: true
+  ansible.builtin.deb822_repository:
+    name: vivaldi
+    types: [deb]
+    uris: https://repo.vivaldi.com/archive/deb/
+    suites: [stable]
+    components: [main]
+    signed_by: /etc/apt/keyrings/vivaldi.asc
+    state: present
+
+- name: Install Vivaldi
+  become: true
+  ansible.builtin.apt:
+    name: vivaldi-stable
+    state: latest
+    update_cache: true

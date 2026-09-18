@@ -1,0 +1,28 @@
+---
+# Microsoft serves an ASCII-armored key.
+# apt reads it directly from a .asc file, so no gpg --dearmor step is needed.
+- name: Download Microsoft GPG key
+  become: true
+  ansible.builtin.get_url:
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    dest: /etc/apt/keyrings/microsoft.asc
+    mode: "0644"
+
+- name: Add VS Code apt repository
+  become: true
+  ansible.builtin.deb822_repository:
+    name: vscode
+    types: [deb]
+    uris: https://packages.microsoft.com/repos/code
+    suites: [stable]
+    components: [main]
+    architectures: [amd64, arm64, armhf]
+    signed_by: /etc/apt/keyrings/microsoft.asc
+    state: present
+
+- name: Install VS Code
+  become: true
+  ansible.builtin.apt:
+    name: code
+    state: latest
+    update_cache: true

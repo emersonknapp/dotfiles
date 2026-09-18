@@ -1,0 +1,28 @@
+---
+# Insync serves an ASCII-armored key.
+# apt reads it directly from a .asc file, so no gpg --dearmor step is needed.
+- name: Download Insync GPG key
+  become: true
+  ansible.builtin.get_url:
+    url: https://apt.insync.io/insynchq.gpg
+    dest: /etc/apt/keyrings/insynchq.asc
+    mode: "0644"
+
+# Insync builds against Ubuntu, so use the ubuntu channel on Pop!_OS and other derivatives.
+- name: Add Insync apt repository
+  become: true
+  ansible.builtin.deb822_repository:
+    name: insync
+    types: [deb]
+    uris: http://apt.insync.io/ubuntu
+    suites: ["{{ ubuntu_codename.stdout }}"]
+    components: [non-free, contrib]
+    signed_by: /etc/apt/keyrings/insynchq.asc
+    state: present
+
+- name: Install Insync
+  become: true
+  ansible.builtin.apt:
+    name: insync
+    state: latest
+    update_cache: true

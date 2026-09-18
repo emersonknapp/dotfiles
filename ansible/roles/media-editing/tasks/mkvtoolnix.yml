@@ -1,0 +1,30 @@
+---
+# The mkvtoolnix key is served as a binary keyring.
+# Store it as .gpg and use as-is (no dearmor needed).
+- name: Download MKVToolNix GPG key
+  become: true
+  ansible.builtin.get_url:
+    url: https://mkvtoolnix.download/gpg-pub-moritzbunkus.gpg
+    dest: /etc/apt/keyrings/gpg-pub-moritzbunkus.gpg
+    mode: "0644"
+
+- name: Add MKVToolNix apt repository
+  become: true
+  ansible.builtin.deb822_repository:
+    name: mkvtoolnix
+    types: [deb, deb-src]
+    uris: https://mkvtoolnix.download/ubuntu/
+    suites: ["{{ ubuntu_codename.stdout }}"]
+    components: [main]
+    architectures: [amd64]
+    signed_by: /etc/apt/keyrings/gpg-pub-moritzbunkus.gpg
+    state: present
+
+- name: Install MKVToolNix
+  become: true
+  ansible.builtin.apt:
+    name:
+      - mkvtoolnix
+      - mkvtoolnix-gui
+    state: present
+    update_cache: true

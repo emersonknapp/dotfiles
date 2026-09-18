@@ -8,16 +8,6 @@
     state: present
     update_cache: true
 
-# The zsh shell hook is provided by the oh-my-zsh `direnv` plugin configured in
-# ek-base's zshrc (it no-ops until direnv is installed), so only the binary is
-# needed here.
-- name: Install direnv
-  become: true
-  ansible.builtin.apt:
-    name: direnv
-    state: present
-    update_cache: true
-
 - name: Create apt keyrings directory
   become: true
   ansible.builtin.file:
@@ -25,21 +15,13 @@
     state: directory
     mode: "0755"
 
-- name: Download Docker GPG key
-  become: true
-  ansible.builtin.get_url:
-    url: https://download.docker.com/linux/ubuntu/gpg
-    dest: /etc/apt/keyrings/docker.asc
-    mode: "0644"
-
 - name: Determine dpkg architecture
   ansible.builtin.command: dpkg --print-architecture
   register: dpkg_architecture
   changed_when: false
 
-# Pop!_OS (and other Ubuntu derivatives) set UBUNTU_CODENAME to the upstream
-# Ubuntu release, which is what these upstream apt repos expect. Fall back to
-# VERSION_CODENAME when UBUNTU_CODENAME is absent.
+# Upstream apt repos expect the UBUNTU_CODENAME variable.
+# Resolve it from /etc/os-release, falling back to VERSION_CODENAME when absent.
 - name: Resolve Ubuntu codename for apt repos
   ansible.builtin.shell: |
     set -o pipefail
@@ -49,131 +31,9 @@
   register: ubuntu_codename
   changed_when: false
 
-- name: Add Docker apt repository
-  become: true
-  ansible.builtin.deb822_repository:
-    name: docker
-    types: [deb]
-    uris: https://download.docker.com/linux/ubuntu
-    suites: ["{{ ubuntu_codename.stdout }}"]
-    components: [stable]
-    architectures: ["{{ dpkg_architecture.stdout }}"]
-    signed_by: /etc/apt/keyrings/docker.asc
-    state: present
-
-- name: Install Docker engine and plugins
-  become: true
-  ansible.builtin.apt:
-    name:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
-      - docker-buildx-plugin
-      - docker-compose-plugin
-    state: present
-    update_cache: true
-
-- name: Download GitHub CLI GPG key
-  become: true
-  ansible.builtin.get_url:
-    url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
-    dest: /etc/apt/keyrings/githubcli-archive-keyring.gpg
-    mode: "0644"
-
-- name: Add GitHub CLI apt repository
-  become: true
-  ansible.builtin.deb822_repository:
-    name: github-cli
-    types: [deb]
-    uris: https://cli.github.com/packages
-    suites: [stable]
-    components: [main]
-    architectures: ["{{ dpkg_architecture.stdout }}"]
-    signed_by: /etc/apt/keyrings/githubcli-archive-keyring.gpg
-    state: present
-
-- name: Install GitHub CLI
-  become: true
-  ansible.builtin.apt:
-    name: gh
-    state: present
-    update_cache: true
-
-# HashiCorp serves an ASCII-armored key; apt reads it directly from a .asc
-# file, so no gpg --dearmor step is needed.
-- name: Download HashiCorp GPG key
-  become: true
-  ansible.builtin.get_url:
-    url: https://apt.releases.hashicorp.com/gpg
-    dest: /etc/apt/keyrings/hashicorp-archive-keyring.asc
-    mode: "0644"
-
-- name: Add HashiCorp apt repository
-  become: true
-  ansible.builtin.deb822_repository:
-    name: hashicorp
-    types: [deb]
-    uris: https://apt.releases.hashicorp.com
-    suites: ["{{ ubuntu_codename.stdout }}"]
-    components: [main]
-    architectures: ["{{ dpkg_architecture.stdout }}"]
-    signed_by: /etc/apt/keyrings/hashicorp-archive-keyring.asc
-    state: present
-
-- name: Install Vagrant
-  become: true
-  ansible.builtin.apt:
-    name: vagrant
-    state: present
-    update_cache: true
-
-- name: Download Kubernetes GPG key
-  become: true
-  ansible.builtin.get_url:
-    url: "https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/deb/Release.key"
-    dest: /etc/apt/keyrings/kubernetes-apt-keyring.asc
-    mode: "0644"
-
-- name: Add Kubernetes apt repository
-  become: true
-  ansible.builtin.deb822_repository:
-    name: kubernetes
-    types: [deb]
-    uris: "https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/deb/"
-    suites: ["/"]
-    signed_by: /etc/apt/keyrings/kubernetes-apt-keyring.asc
-    state: present
-
-- name: Install kubectl
-  become: true
-  ansible.builtin.apt:
-    name: kubectl
-    state: present
-    update_cache: true
-
-# Tailscale ships the key pre-dearmored (noarmor.gpg), so it is stored as .gpg
-# and used as-is. The key is served per Ubuntu codename.
-- name: Download Tailscale GPG key
-  become: true
-  ansible.builtin.get_url:
-    url: "https://pkgs.tailscale.com/stable/ubuntu/{{ ubuntu_codename.stdout }}.noarmor.gpg"
-    dest: /etc/apt/keyrings/tailscale-archive-keyring.gpg
-    mode: "0644"
-
-- name: Add Tailscale apt repository
-  become: true
-  ansible.builtin.deb822_repository:
-    name: tailscale
-    types: [deb]
-    uris: https://pkgs.tailscale.com/stable/ubuntu
-    suites: ["{{ ubuntu_codename.stdout }}"]
-    components: [main]
-    signed_by: /etc/apt/keyrings/tailscale-archive-keyring.gpg
-    state: present
-
-- name: Install Tailscale
-  become: true
-  ansible.builtin.apt:
-    name: tailscale
-    state: present
-    update_cache: true
+- ansible.builtin.import_tasks: direnv.yml
+- ansible.builtin.import_tasks: docker.yml
+- ansible.builtin.import_tasks: github-cli.yml
+- ansible.builtin.import_tasks: vagrant.yml
+- ansible.builtin.import_tasks: kubectl.yml
+- ansible.builtin.import_tasks: tailscale.yml

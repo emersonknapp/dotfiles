@@ -1,0 +1,28 @@
+---
+# HashiCorp serves an ASCII-armored key.
+# apt reads it directly from a .asc file, so no gpg --dearmor step is needed.
+- name: Download HashiCorp GPG key
+  become: true
+  ansible.builtin.get_url:
+    url: https://apt.releases.hashicorp.com/gpg
+    dest: /etc/apt/keyrings/hashicorp-archive-keyring.asc
+    mode: "0644"
+
+- name: Add HashiCorp apt repository
+  become: true
+  ansible.builtin.deb822_repository:
+    name: hashicorp
+    types: [deb]
+    uris: https://apt.releases.hashicorp.com
+    suites: ["{{ ubuntu_codename.stdout }}"]
+    components: [main]
+    architectures: ["{{ dpkg_architecture.stdout }}"]
+    signed_by: /etc/apt/keyrings/hashicorp-archive-keyring.asc
+    state: present
+
+- name: Install Vagrant
+  become: true
+  ansible.builtin.apt:
+    name: vagrant
+    state: present
+    update_cache: true

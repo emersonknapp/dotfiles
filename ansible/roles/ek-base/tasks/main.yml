@@ -11,6 +11,7 @@
       - direnv
       - git
       - htop
+      - rasdaemon  # collects hardware errors for monitoring
       - tmux
       - tree
       - vim
@@ -91,3 +92,11 @@
   become: true
   ansible.builtin.apt:
     deb: "/tmp/revdiff_{{ revdiff_version }}_linux_{{ dpkg_architecture.stdout }}.deb"
+
+# Linger keeps the user's systemd services running after logout and starts them at boot.
+# The marker file under /var/lib/systemd/linger makes this idempotent.
+- name: Enable systemd linger for the user
+  become: true
+  ansible.builtin.command:
+    cmd: loginctl enable-linger {{ ansible_facts['env'].USER }}
+    creates: "/var/lib/systemd/linger/{{ ansible_facts['env'].USER }}"

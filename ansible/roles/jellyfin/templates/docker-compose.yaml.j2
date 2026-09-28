@@ -1,0 +1,27 @@
+# Managed by Ansible (roles/jellyfin). Edit the role template, not this file.
+services:
+  jellyfin:
+    container_name: jellyfin
+    image: {{ jellyfin_image }}
+    restart: unless-stopped
+    # Host networking gives Jellyfin the LAN directly for DLNA and client discovery,
+    # matching the homeassistant setup. Ports (8096 etc.) are exposed on the host.
+    network_mode: host
+    # The nvidia runtime (configured in /etc/docker/daemon.json) exposes the GPU
+    # for NVENC transcoding.
+    runtime: nvidia
+    # Run as the host jellyfin user so the container can read the migrated data
+    # and the media libraries.
+    user: "{{ jellyfin_uid }}:{{ jellyfin_gid }}"
+    group_add:
+      - "{{ jellyfin_render_gid }}"
+      - "{{ jellyfin_video_gid }}"
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    volumes:
+      - {{ jellyfin_home }}/config:/config
+      - {{ jellyfin_home }}/cache:/cache
+{% for mount in jellyfin_media_mounts %}
+      - {{ mount }}
+{% endfor %}

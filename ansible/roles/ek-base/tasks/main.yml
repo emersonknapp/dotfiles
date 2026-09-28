@@ -11,11 +11,19 @@
       - direnv
       - git
       - htop
-      - rasdaemon  # collects hardware errors for monitoring
       - tmux
       - tree
       - vim
       - zsh
+    state: present
+    update_cache: true
+
+- name: System maintenance packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - rasdaemon  # collects hardware errors for monitoring
+      - memtest86+
     state: present
     update_cache: true
 

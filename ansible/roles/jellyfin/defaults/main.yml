@@ -1,0 +1,18 @@
+---
+# Where the compose file and container volumes live, matching the homeassistant pattern.
+jellyfin_home: "{{ ansible_facts['env'].HOME }}/dev/tools/jellyfin"
+
+jellyfin_image: jellyfin/jellyfin:latest
+
+# Run the container as the host jellyfin user so it reuses existing data/media
+# ownership. These map to the bare-metal jellyfin account on this host.
+# Adjust per machine (see `id jellyfin`, `getent group render video`).
+jellyfin_uid: 132
+jellyfin_gid: 140
+jellyfin_render_gid: 109
+jellyfin_video_gid: 44
+
+# Media libraries to mount, as "host_path:container_path" entries.
+# Replace the placeholder with your real library path(s) before starting.
+jellyfin_media_mounts:
+  - /PATH_TO_YOUR_MEDIA:/media

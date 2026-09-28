@@ -1,3 +1,5 @@
 ---
 collections:
   - name: community.general
+  # Used by the jellyfin role's compose deploy (docker_compose_v2).
+  - name: community.docker

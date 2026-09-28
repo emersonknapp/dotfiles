@@ -1,0 +1,49 @@
+---
+# Jellyfin runs as a container with NVIDIA hardware transcoding, deployed via
+# docker compose. See README.md for how to run this, GPU prerequisites, and the
+# one-time data migration from a bare-metal install.
+#
+# This role only prepares the compose file and config volume. Starting the
+# container is a deliberate step, not part of a converge, because it would
+# conflict with an existing bare-metal Jellyfin (port 8096 and the data dir).
+# Bring it up with the documented command, or uncomment the deploy task below
+# once the bare-metal install has been stopped.
+
+- name: Ensure Jellyfin project directories exist
+  become: true
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ jellyfin_uid }}"
+    group: "{{ jellyfin_gid }}"
+    mode: "0755"
+  loop:
+    - "{{ jellyfin_home }}/config"
+    - "{{ jellyfin_home }}/config/config"
+    - "{{ jellyfin_home }}/cache"
+
+- name: Deploy Jellyfin docker-compose file
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ jellyfin_home }}/docker-compose.yaml"
+    mode: "0644"
+
+# Seed the NVENC hardware-acceleration config on a fresh install.
+# force: false means a migrated encoding.xml is left untouched, and Jellyfin
+# owns the file thereafter.
+- name: Seed encoding.xml with NVENC hardware acceleration
+  become: true
+  ansible.builtin.template:
+    src: encoding.xml.j2
+    dest: "{{ jellyfin_home }}/config/config/encoding.xml"
+    owner: "{{ jellyfin_uid }}"
+    group: "{{ jellyfin_gid }}"
+    mode: "0644"
+    force: false
+
+# Cutover step, intentionally left commented until you retire the bare-metal
+# install. Uncomment to have converge manage the running container.
+# - name: Start Jellyfin
+#   community.docker.docker_compose_v2:
+#     project_src: "{{ jellyfin_home }}"
+#     state: present

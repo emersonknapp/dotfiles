@@ -1,0 +1,4 @@
+---
+# OpenCode v2 release to install. No apt repo exists, only an install script and
+# pinned binary tarballs, so this is bumped manually. See https://opencode.ai/v2/docs
+opencode_version: 2.0.6

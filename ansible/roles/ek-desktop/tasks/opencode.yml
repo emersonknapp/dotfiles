@@ -1,0 +1,28 @@
+---
+# OpenCode v2 has no apt repo, only an install script and pinned binary tarballs.
+# Install the tarball binary to /usr/local/bin rather than curl-piping the script, to keep the install declarative and pinned.
+# Each tarball holds a single `opencode` binary at its root.
+- name: Determine dpkg architecture
+  ansible.builtin.command: dpkg --print-architecture
+  register: dpkg_architecture
+  changed_when: false
+
+- name: Map dpkg architecture to OpenCode tarball architecture
+  ansible.builtin.set_fact:
+    opencode_arch: "{{ {'amd64': 'x64', 'arm64': 'arm64'}[dpkg_architecture.stdout] }}"
+
+- name: Check installed OpenCode version
+  ansible.builtin.command: opencode --version
+  register: opencode_installed
+  changed_when: false
+  failed_when: false
+
+- name: Install OpenCode
+  # `opencode --version` prints the bare version string, e.g. "2.0.6".
+  when: opencode_version not in opencode_installed.stdout
+  become: true
+  ansible.builtin.unarchive:
+    src: "https://opencode.ai/files/bin/{{ opencode_version }}/opencode-linux-{{ opencode_arch }}.tar.gz"
+    dest: /usr/local/bin
+    remote_src: true
+    mode: "0755"

@@ -1,0 +1,41 @@
+---
+# Obsidian has no apt repo, only bare .deb releases on GitHub.
+# The /latest endpoint points at a mobile-only apk release and not every release ships a desktop deb,
+# so query recent releases (newest first) and pick the first amd64 .deb asset.
+- name: Query Obsidian releases
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/obsidianmd/obsidian-releases/releases?per_page=20
+    return_content: true
+  register: obsidian_releases
+
+- name: Resolve latest Obsidian amd64 .deb asset
+  ansible.builtin.set_fact:
+    obsidian_deb: >-
+      {{ obsidian_releases.json | map(attribute='assets') | flatten
+         | selectattr('name', 'match', '^obsidian_.*_amd64\.deb$') | first }}
+
+- name: Extract Obsidian version
+  ansible.builtin.set_fact:
+    obsidian_version: "{{ obsidian_deb.name | regex_replace('^obsidian_(.*)_amd64\\.deb$', '\\1') }}"
+
+- name: Check installed Obsidian version
+  ansible.builtin.command: dpkg-query --showformat='${Version}' --show obsidian
+  register: obsidian_installed
+  changed_when: false
+  failed_when: false
+
+# apt's deb= install is idempotent by dpkg version, but guarding the download avoids fetching
+# the deb on every run once it is already installed.
+- name: Download and install Obsidian
+  when: obsidian_installed.stdout != obsidian_version
+  block:
+    - name: Download Obsidian .deb
+      ansible.builtin.get_url:
+        url: "{{ obsidian_deb.browser_download_url }}"
+        dest: "/tmp/{{ obsidian_deb.name }}"
+        mode: "0644"
+
+    - name: Install Obsidian
+      become: true
+      ansible.builtin.apt:
+        deb: "/tmp/{{ obsidian_deb.name }}"

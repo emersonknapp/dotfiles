@@ -23,3 +23,4 @@
 - ansible.builtin.import_tasks: vscode.yml
 - ansible.builtin.import_tasks: regolith.yml
 - ansible.builtin.import_tasks: 1password.yml
+- ansible.builtin.import_tasks: obsidian.yml

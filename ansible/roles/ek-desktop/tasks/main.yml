@@ -18,6 +18,14 @@
   register: ubuntu_codename
   changed_when: false
 
+- name: Install base packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - alacritty
+    state: present
+    update_cache: true
+
 - ansible.builtin.import_tasks: insync.yml
 - ansible.builtin.import_tasks: vivaldi.yml
 - ansible.builtin.import_tasks: vscode.yml

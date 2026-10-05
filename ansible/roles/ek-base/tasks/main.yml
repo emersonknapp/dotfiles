@@ -101,6 +101,19 @@
   ansible.builtin.apt:
     deb: "/tmp/revdiff_{{ revdiff_version }}_linux_{{ dpkg_architecture.stdout }}.deb"
 
+- name: Ensure revdiff config directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env'].HOME }}/.config/revdiff"
+    state: directory
+    mode: "0750"
+
+- name: Symlink revdiff config
+  ansible.builtin.file:
+    src: "{{ ansible_facts['env'].HOME }}/.dotfiles/revdiffconfig"
+    dest: "{{ ansible_facts['env'].HOME }}/.config/revdiff/config"
+    state: link
+    force: true
+
 # Linger keeps the user's systemd services running after logout and starts them at boot.
 # The marker file under /var/lib/systemd/linger makes this idempotent.
 - name: Enable systemd linger for the user

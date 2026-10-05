@@ -41,7 +41,7 @@ Playbooks compose roles:
 
 Roles (each self-contained):
 
-- `ek-base` -- shell (oh-my-zsh + zsh), git, tmux, vim config; base for any machine
+- `ek-base` -- shell (oh-my-zsh + zsh), git, tmux, vim, revdiff config; base for any machine
 - `ek-desktop` -- GUI tools: Insync, Vivaldi, VS Code, Regolith
 - `polymath-dev` -- Docker, GitHub CLI, Vagrant, kubectl, Tailscale
 - `media-editing` -- MKVToolNix, OBS Studio

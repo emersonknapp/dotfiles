@@ -125,3 +125,14 @@ show_virtual_env() {
   fi
 }
 PS1='$(show_virtual_env)'$PS1
+
+# Review a GitHub PR locally against its own base, from any checkout of the repo.
+rvpr () {
+        local pr=$1
+        shift
+        local base head
+        base=$(gh pr view "$pr" --json baseRefName -q .baseRefName)
+        head=$(gh pr view "$pr" --json headRefName -q .headRefName)
+        git fetch --quiet origin "$base"
+        revdiff "origin/$base...$head" -o "/tmp/revdiff-pr$pr.md" "$@"
+}
